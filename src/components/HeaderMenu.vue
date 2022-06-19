@@ -11,14 +11,16 @@
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Insertar cama</a>
+                <li class="nav-item" >
+                    <router-link class="nav-link" to="/insertpatient">
+                        Insertar paciente
+                    </router-link>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#">Actualizar cama</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#">Consultar cama</a>
+
+                <li class="nav-item" >
+                    <router-link class="nav-link" to="/searchbed">
+                        Consultar cama
+                    </router-link>
                 </li>
             </ul>
         </div>
