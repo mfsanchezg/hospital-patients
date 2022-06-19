@@ -17,9 +17,5 @@ const router = createRouter({
 
 const app = createApp(App);
 app.use(router);
-
-//app.component('insert-update-patient', InsertUpdatePatient);
 app.component('header-menu', HeaderMenu);
-
 app.mount('#app');
-
