@@ -10,7 +10,7 @@
         data(){
             return {
                 brand: 'IQ SPACES',
-                title: "Manejo hospitalario de camas"
+                title: "Etiquetas electrónicas"
             }
         }
     }
