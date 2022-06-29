@@ -137,14 +137,19 @@
         </div>
         
         <div class="col-lg-12">
-            <button type="submit" class="btn btn-primary"> Agregar paciente </button>
+            <button type="submit" class="btn btn-primary" :disabled="disableSaveButton" v-show="!isLoading"> Agregar paciente </button>
+            <button class="btn btn-primary" type="button" v-show="isLoading" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+            </button>
         </div>
   </form>
-  <div class="alert alert-success" role="alert">
-    <span class="bi-check-circle-fill"></span> Habitación {{ itemBarCode }} agregada correctamente.
+  <div v-if="isSuccessfulAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+    <span class="bi-check-circle-fill"></span> Paciente <strong>{{ temporalName }}</strong> agregado correctamente a la habitación <strong>{{ temporalHabitacion }}</strong>.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
-  <div class="alert alert-danger" role="alert">
-    <span class="bi-exclamation-triangle-fill"></span> Error al agregar la habitación {{ itemBarCode }}.
+  <div v-if="isErrorAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span class="bi-exclamation-triangle-fill"></span> <strong>ERROR!</strong> No se pudo agregar el paciente a la habitación <strong>{{ temporalHabitacion }}</strong>.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 </div>
 </template>
@@ -191,7 +196,9 @@
         return {
         
           itemBarCode:             '0',
+          temporalHabitacion: '',
           itemName:                '',
+          temporalName : '',
           merchantGoodsId:         this.itemBarCode,
           merchantGoodsCategoryId: this.itemBarCode,
           goodsNo:                 '',
@@ -207,13 +214,19 @@
           itemQrCode:              '',
           mixture:                 '',
           itemBaseUnit:            '',
-          categoryName:            'Paciente'
-          
-        };
+          categoryName:            'Paciente',
+
+          isSuccessfulAlert:       false,
+          isErrorAlert:            false,
+          isLoading:               false
+      };
     },
 
     methods: {
       save(){
+        this.isLoading = true;
+        this.temporalHabitacion = this.itemBarCode;
+        this.temporalName = this.itemName;
 
         let jsontopost = JSON.stringify([{
           itemBarCode:             this.itemBarCode,
@@ -246,6 +259,7 @@
             'merchantCode': 'MC1220',
             'type': '1'
         },
+
         body: JSON.stringify([{
           itemBarCode:             this.itemBarCode,
           itemName:                this.itemName,
@@ -271,16 +285,49 @@
         .then((response) => {
           if (response.ok) {
             console.log("RESULT OK :)");
+            
+            this.isSuccessfulAlert = true;
+            this.isErrorAlert = false;
+            this.clearForm();
+
             result => console.log(result.json())
           } else {
+            this.isSuccessfulAlert = false;
+            this.isErrorAlert = true;
+            this.clearForm();
+
             throw new Error('Could not save data!');
           }
         })
         .catch((error) => {
+          this.isSuccessfulAlert = false;
+          this.isErrorAlert = true;
+          this.clearForm();
+
           console.log(error);
           this.error = error.message;
         });
 
+      },
+
+      clearForm(){
+          this.itemBarCode=          '0';
+          this.itemName=             '';
+          this.goodsNo=              '';
+          this.stock=                '';
+          this.manufacture=          '';
+          this.storageCondition=     '';
+          this.eatMethod=            '';
+          this.itemProductionPlace = '';
+          this.license=              '';
+          this.specifications=       '';
+          this.grade=                '';
+          this.company=              '';
+          this.itemQrCode=           '';
+          this.mixture=              '';
+          this.itemBaseUnit=         '';
+          this.isDisableSaveButton = true;
+          this.isLoading = false;
       },
       
       generateHash(){
@@ -301,6 +348,25 @@
         console.log(hash1);
 
         return hash1;
+      }
+    },
+    computed: {
+      disableSaveButton(){
+        return this.itemBarCode    == '0' ||
+          this.itemName            == ''  ||
+          this.goodsNo             == ''  ||
+          this.stock               == ''  ||
+          this.manufacture         == ''  ||
+          this.storageCondition    == ''  ||
+          this.eatMethod           == ''  ||
+          this.itemProductionPlace == ''  ||
+          this.license             == ''  ||
+          this.specifications      == ''  ||
+          this.grade               == ''  ||
+          this.company             == ''  ||
+          this.itemQrCode          == ''  ||
+          this.mixture             == ''  ||
+          this.itemBaseUnit        == ''
       }
     }
   };
