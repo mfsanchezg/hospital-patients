@@ -1,5 +1,13 @@
 <template>
 <div class="container mt-4">
+  <div v-if="isSuccessfulAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+    <span class="bi-check-circle-fill"></span> Paciente <strong>{{ temporalName }}</strong> agregado correctamente a la habitación <strong>{{ temporalHabitacion }}</strong>.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <div v-if="isErrorAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span class="bi-exclamation-triangle-fill"></span> <strong>ERROR!</strong> No se pudo agregar el paciente a la habitación <strong>{{ temporalHabitacion }}</strong>.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
   <h5 class="mb-4"> Digite la información del paciente: </h5>
   <form class="row gy-2 gx-3 align-items-center needs-validation mb-4" @submit.prevent="save" novalidate>
        
@@ -143,14 +151,6 @@
             </button>
         </div>
   </form>
-  <div v-if="isSuccessfulAlert" class="alert alert-success alert-dismissible fade show" role="alert">
-    <span class="bi-check-circle-fill"></span> Paciente <strong>{{ temporalName }}</strong> agregado correctamente a la habitación <strong>{{ temporalHabitacion }}</strong>.
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-  <div v-if="isErrorAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <span class="bi-exclamation-triangle-fill"></span> <strong>ERROR!</strong> No se pudo agregar el paciente a la habitación <strong>{{ temporalHabitacion }}</strong>.
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
 </div>
 </template>
 
@@ -328,6 +328,11 @@
           this.itemBaseUnit=         '';
           this.isDisableSaveButton = true;
           this.isLoading = false;
+
+          window.scrollTo({
+             top: 0,
+             behavior: "smooth"
+        });
       },
       
       generateHash(){
