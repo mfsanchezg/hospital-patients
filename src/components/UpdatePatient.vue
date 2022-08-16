@@ -8,8 +8,25 @@
     <span class="bi-exclamation-triangle-fill"></span> <strong>ERROR!</strong> No se pudo agregar el paciente a la habitación <strong>{{ temporalHabitacion }}</strong>.
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
-  <h5 class="mb-4"> Digite la información del paciente: </h5>
-  <form class="row gy-2 gx-3 align-items-center needs-validation mb-4" @submit.prevent="save" novalidate>
+
+  <h1 class="mb-4">Actualizar habitación/cama</h1>
+
+  <div class="col-sm-12 col-md-6 mb-4">
+      <div class="input-group input-group-sm">
+      <div for="barCode" class="input-group-text col-sm-5">Seleccione Hab./cama asignada:</div>
+      <select v-model="itemBarCode" class="form-select col-sm-1" name="barCode" id="barCode">
+          <option value="0">Seleccione...</option>
+          <option value="101A">101A</option>
+          <option value="101B">101B</option>
+          <option value="201A">201A</option>
+          <option value="201B">201B</option>
+      </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary" :disabled="disableSaveButton" v-show="!isLoading"> Buscar hab/cama </button>
+  </div>
+
+  <form v-show="!showForm" class="row gy-2 gx-3 align-items-center needs-validation mb-4" @submit.prevent="save" novalidate>
        
       <div class="col-sm-12 col-md-6">
         <div class="input-group input-group-sm">
@@ -218,7 +235,8 @@
 
           isSuccessfulAlert:       false,
           isErrorAlert:            false,
-          isLoading:               false
+          isLoading:               false,
+          showForm:                false
       };
     },
 
@@ -252,12 +270,12 @@
         console.log("JSON to POST -> " + jsontopost);
         
         fetch('https://sg.yalabi.net/open/saveOrGoods', {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            'veryText': this.generateHash(),
-            'merchantCode': 'MC1220',
-            'type': '1'
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'veryText': this.generateHash(),
+                'merchantCode': 'MC1220',
+                'type': '1'
         },
 
         body: JSON.stringify([{
@@ -308,6 +326,49 @@
           this.error = error.message;
         });
 
+      },
+
+      consultarPantalla(){
+          fetch('https://sg.yalabi.net/open/getGoodsList', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'veryText': this.generateHash(),
+                'merchantCode': 'MC1220'
+        },
+
+        body: JSON.stringify([{
+          pageSize:    40,
+          currentPage: 1,
+          barCode:     this.itemBarCode
+        }]),
+        redirect: 'follow'
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("RESULT OK :)");
+            
+            this.isSuccessfulAlert = true;
+            this.isErrorAlert = false;
+            this.clearForm();
+
+            result => console.log(result.json())
+          } else {
+            this.isSuccessfulAlert = false;
+            this.isErrorAlert = true;
+            this.clearForm();
+
+            throw new Error('Could not save data!');
+          }
+        })
+        .catch((error) => {
+          this.isSuccessfulAlert = false;
+          this.isErrorAlert = true;
+          this.clearForm();
+
+          console.log(error);
+          this.error = error.message;
+        });
       },
 
       clearForm(){

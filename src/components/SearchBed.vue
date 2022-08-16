@@ -2,6 +2,19 @@
     <div class="container">
         <h1 class="mb-4">{{ titulo }}</h1>
 
+        <div class="col-sm-12 col-md-6 mb-4">
+            <div class="input-group input-group-sm">
+            <div for="barCode" class="input-group-text col-sm-5">Seleccione Hab./cama asignada:</div>
+            <select v-model="itemBarCode" class="form-select col-sm-1" name="barCode" id="barCode">
+                <option value="0">Seleccione...</option>
+                <option value="101A">101A</option>
+                <option value="101B">101B</option>
+                <option value="201A">201A</option>
+                <option value="201B">201B</option>
+            </select>
+            </div>
+        </div>
+
         <table class="table table-striped table-hover">
             <thead class="table-dark">
                 <tr>
@@ -37,7 +50,7 @@
 export default {
     data() {
         return {
-            titulo: 'Search bed functionality'
+            titulo: 'Buscar habitación/cama'
         }
     }
 }

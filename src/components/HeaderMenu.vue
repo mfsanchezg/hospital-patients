@@ -23,6 +23,12 @@
                 </li>
 
                 <li class="nav-item" >
+                    <router-link class="nav-link" to="/updatepatient">
+                        <span class="bi-collection"></span> Actualizar hab./cama
+                    </router-link>
+                </li>
+
+                <li class="nav-item" >
                     <router-link class="nav-link" to="/searchbed">
                         <span class="bi-search"></span> Consultar hab./cama
                     </router-link>
